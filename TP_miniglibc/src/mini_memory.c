@@ -14,11 +14,11 @@ malloc_element *malloc_list = NULL;
 
 void *mini_calloc(int size_element, int number_element){
     if(size_element < 0){
-        perror("Invalid size of element!");
+        mini_perror("Invalid size of element!");
         return NULL;
     }
     if(number_element < 0){
-        perror("Invalid number of element!");
+        mini_perror("Invalid number of element!");
         return NULL;
     }
     if(size_element == 0 || number_element == 0){
@@ -36,12 +36,12 @@ void *mini_calloc(int size_element, int number_element){
     }
     void *buffer = sbrk(final_size);
     if(buffer == ((void *) -1)){
-        perror("Cannot allocate memory!");
+        mini_perror("Cannot allocate memory!");
         return NULL;
     }
     malloc_element *new_element = sbrk(sizeof(malloc_element));
     if(new_element == NULL){
-        perror("Cannot store information of allocated zone!");
+        mini_perror("Cannot store information of allocated zone!");
         return NULL;
     }
     bzero(buffer, final_size);
