@@ -71,5 +71,11 @@ void mini_exit(){
     while(file_list != NULL){
         mini_fclose(file_list->my_file);
     }
+    while(malloc_list != NULL){
+        mini_free(malloc_list->allocated_zone);
+        malloc_element *tmp = malloc_list->my_malloc;
+        mini_free(malloc_list);
+        malloc_list = tmp;
+    }
     _exit(0);
 }

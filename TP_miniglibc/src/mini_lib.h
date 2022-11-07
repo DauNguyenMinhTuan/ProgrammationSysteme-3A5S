@@ -52,4 +52,16 @@ int mini_fputc(MYFILE *file, char c);
 
 void mini_touch(char *file);
 
+void mini_cp(char *src, char *dest);
+
+void mini_echo(char *chaine);
+
+void mini_cat(char *file_path);
+
+void mini_head(char *file_path, int number_line);
+
+void mini_tail(char *file_path, int number_line);
+
+void mini_clean(char *file_path);
+
 #endif

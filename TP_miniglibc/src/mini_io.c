@@ -39,6 +39,7 @@ MYFILE* mini_fopen(char *file, char mode){
             break;
         default:
             perror("Invalid file mode!");
+            return NULL;
     }
     if(new_file->fd <= 0){
         mini_perror("Error opening file!");
@@ -174,9 +175,9 @@ int mini_fputc(MYFILE *file, char c){
 }
 
 void mini_touch(char *file){
-    int fd = open(file, O_EXCL | O_CREAT);
+    int fd = open(file, O_RDWR | O_CREAT, S_IRWXU | S_IRWXO);
     if(fd <= 0){
-        mini_perror("File Already Exists!");
+        // mini_perror("File Already Exists!");
         return;
     }
     int ok = close(fd);
@@ -184,4 +185,142 @@ void mini_touch(char *file){
         mini_perror("Error Closing File!");
         return;
     }
+}
+
+void mini_cp(char *src, char *dest){
+    MYFILE *src_file = mini_fopen(src, 'r');
+    mini_touch(dest);
+    MYFILE *dest_file = mini_fopen(dest, 'w');
+    if(src_file == NULL || dest_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(src, &st);
+    int file_size = st.st_size;
+    int checker;
+    char *data;
+    data = (char*)mini_calloc(1, file_size);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if((checker = mini_fread(data, 1, file_size, src_file)) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    if(mini_fwrite(data, 1, file_size, dest_file) < 0){
+        mini_perror("Error Copying Data To Destination File!");
+        return;
+    }
+}
+
+void mini_echo(char *chaine){
+    mini_printf(chaine);
+}
+
+void mini_cat(char *file_path){
+    MYFILE *my_file = mini_fopen(file_path, 'r');
+    if(my_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(file_path, &st);
+    int file_size = st.st_size;
+    char *data = (char*)mini_calloc(1, file_size + 1);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if(mini_fread(data, 1, file_size, my_file) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    data[file_size] = '\0';
+    mini_printf(data);
+}
+
+void mini_head(char *file_path, int number_line){
+    if(number_line < 0){
+        mini_perror("Invalid Number Of Lines!");
+        return;
+    }
+    if(number_line == 0){
+        return;
+    }
+    MYFILE *my_file = mini_fopen(file_path, 'r');
+    if(my_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(file_path, &st);
+    int file_size = st.st_size;
+    char *data = (char*)mini_calloc(1, file_size + 1);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if(mini_fread(data, 1, file_size, my_file) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    int line_count = 0, pos = file_size;
+    for(int i = 0; i < file_size; i++){
+        if(data[i] == '\n'){
+            line_count++;
+            if(line_count == number_line){
+                pos = i + 1;
+                break;
+            }
+        }
+    }
+    data[pos] = '\0';
+    mini_printf(data);
+}
+
+void mini_tail(char *file_path, int number_line){
+    if(number_line < 0){
+        mini_perror("Invalid Number Of Lines!");
+        return;
+    }
+    if(number_line == 0){
+        return;
+    }
+    MYFILE *my_file = mini_fopen(file_path, 'r');
+    if(my_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(file_path, &st);
+    int file_size = st.st_size;
+    char *data = (char*)mini_calloc(1, file_size + 1);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if(mini_fread(data, 1, file_size, my_file) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    int start_pos = 0;
+    int line_count = 0;
+    for(int i = file_size - 1; i >= 0; i--){
+        if(data[i] == '\n'){
+            line_count++;
+            if(line_count == number_line){
+                start_pos = i + 1;
+                break;
+            }
+        }
+    }
+    data[file_size] = '\0';
+    mini_printf(data + start_pos);
+}
+
+void mini_clean(char *file_path){
+    mini_touch(file_path);
+    mini_fopen(file_path, 'w');
 }
