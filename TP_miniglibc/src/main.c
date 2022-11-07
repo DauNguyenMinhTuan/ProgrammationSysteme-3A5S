@@ -13,13 +13,26 @@ int main(int argc, char **argv){
     // mini_printf(msg);
     // mini_scanf(msg, 10);
     // mini_printf(msg);
-    MYFILE *my_file;
-    my_file = mini_fopen("./src/mini_memory.c", 'r');
+    MYFILE *inp_file;
+    inp_file = mini_fopen("./src/mini_string.c", 'r');
     char *str;
     str = (char*)mini_calloc(1, 5000);
     int cnt;
-    cnt = mini_fread(str, 1, 3000, my_file);
-    printf("%s\n%d\n", str, cnt);
+    cnt = mini_fread(str, 1, 3000, inp_file);
+    MYFILE *out_file;
+    out_file = mini_fopen("./dummy.out", 'w');
+    mini_fwrite(str, 1, 3000, out_file);
+    MYFILE *file1;
+    MYFILE *file2;
+    file1 = mini_fopen("./src/main.c", 'r');
+    file2 = mini_fopen("./dummy2.out", 'w');
+    int c = mini_fgetc(file1);
+    if(c < 0){
+        mini_perror("fgetc Error!");
+        return 1;
+    }
+    mini_fputc(file2, c);
+    mini_touch("./dummy3.out");
     mini_exit();
-    // exo30 fini
+    // exo35 fini
 }

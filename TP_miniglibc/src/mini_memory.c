@@ -68,5 +68,8 @@ void mini_free(void *ptr){
 }
 
 void mini_exit(){
+    while(file_list != NULL){
+        mini_fclose(file_list->my_file);
+    }
     _exit(0);
 }

@@ -15,3 +15,6 @@ Si la taille de la chaine de destination de strcpy est inferieure a celle de la 
 La solution consiste a ne copier qu'au plus dest_size - 1 du caractere de la chaine (laissez 1 espace pour le caractere de fin de ligne) source ou dest_size est la taille de la chaine de destination
 Si les deux chaines saisies dans strcmp ne se terminent pas par un caractere nul, il existe un risque de depassement de memoire
 La solution est d'avoir une limite au nombre de caracteres compares
+
+Reponse a la question 34:
+Si le tampon d'ecriture n'est pas plein lorsque le programme se termine, il existe une partie des donnees dans le tampon qui n'ont pas ete imprimees
