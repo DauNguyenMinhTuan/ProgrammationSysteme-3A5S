@@ -64,4 +64,8 @@ void mini_tail(char *file_path, int number_line);
 
 void mini_clean(char *file_path);
 
+void mini_grep(char *word, char *file_path);
+
+void mini_wc(char *file_path);
+
 #endif

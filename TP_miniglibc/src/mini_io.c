@@ -213,6 +213,8 @@ void mini_cp(char *src, char *dest){
         mini_perror("Error Copying Data To Destination File!");
         return;
     }
+    mini_fclose(src_file);
+    mini_fclose(dest_file);
 }
 
 void mini_echo(char *chaine){
@@ -239,6 +241,7 @@ void mini_cat(char *file_path){
     }
     data[file_size] = '\0';
     mini_printf(data);
+    mini_fclose(my_file);
 }
 
 void mini_head(char *file_path, int number_line){
@@ -278,6 +281,7 @@ void mini_head(char *file_path, int number_line){
     }
     data[pos] = '\0';
     mini_printf(data);
+    mini_fclose(my_file);
 }
 
 void mini_tail(char *file_path, int number_line){
@@ -296,7 +300,7 @@ void mini_tail(char *file_path, int number_line){
     struct stat st;
     stat(file_path, &st);
     int file_size = st.st_size;
-    char *data = (char*)mini_calloc(1, file_size + 1);
+    char *data = (char*)mini_calloc(1, file_size + 2);
     if(data == NULL){
         mini_perror("Cannot Initiate Intermediate Buffer!");
         return;
@@ -316,11 +320,117 @@ void mini_tail(char *file_path, int number_line){
             }
         }
     }
-    data[file_size] = '\0';
+    data[file_size] = '\n';
+    data[file_size + 1] = '\0';
     mini_printf(data + start_pos);
+    mini_fclose(my_file);
 }
 
 void mini_clean(char *file_path){
     mini_touch(file_path);
-    mini_fopen(file_path, 'w');
+    mini_fclose(mini_fopen(file_path, 'w'));
+}
+
+void mini_grep(char *word, char *file_path){
+    MYFILE *my_file = mini_fopen(file_path, 'r');
+    if(my_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(file_path, &st);
+    int file_size = st.st_size;
+    char *data = (char*)mini_calloc(1, file_size + 1);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if(mini_fread(data, 1, file_size, my_file) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    data[file_size] = '\0';
+    for(int i = 0; i <= file_size - mini_strlen(word); i++){
+        if(data[i] == word[0]){
+            int ok = 1;
+            for(int j = 0; j < mini_strlen(word); j++){
+                if(data[i + j] != word[j]){
+                    ok = 0;
+                    break;
+                }
+            }
+            if(!ok){
+                continue;
+            }
+            int start_pos, end_pos;
+            start_pos = i;
+            while(start_pos > 0 && data[start_pos - 1] != '\n'){
+                start_pos--;
+            }
+            end_pos = i + mini_strlen(word) - 1;
+            while(end_pos < file_size && data[end_pos] != '\n'){
+                end_pos++;
+            }
+            char *line = (char*)mini_calloc(1, end_pos - start_pos + 2);
+            if(line == NULL){
+                mini_perror("Cannot Initiate Intermediate Buffer!");
+                return;
+            }
+            for(int j = start_pos; j < end_pos; j++){
+                line[j - start_pos] = data[j];
+            }
+            line[end_pos - start_pos] = '\n';
+            line[end_pos - start_pos + 1] = '\0';
+            mini_printf(line);
+            i = end_pos;
+        }
+    }
+    mini_fclose(my_file);
+}
+
+void mini_wc(char *file_path){
+    MYFILE *my_file = mini_fopen(file_path, 'r');
+    if(my_file == NULL){
+        mini_perror("Cannot Open File!");
+        return;
+    }
+    struct stat st;
+    stat(file_path, &st);
+    int file_size = st.st_size;
+    char *data = (char*)mini_calloc(1, file_size + 1);
+    if(data == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer!");
+        return;
+    }
+    if(mini_fread(data, 1, file_size, my_file) < 0){
+        mini_perror("Error Reading Data From Source File!");
+        return;
+    }
+    data[file_size] = '\0';
+    int count = 0;
+    for(int i = 0; i < file_size; i++){
+        if((data[i] == ' ' || data[i] == '\n') && data[i - 1] != ' ' && data[i - 1] != '\n'){
+            count++;
+        }
+    }
+    count += (data[file_size - 1] != ' ' && data[file_size - 1] != '\n');
+    int number_digit = 0;
+    int tmp = count;
+    while(tmp){
+        number_digit++;
+        tmp /= 10;
+    }
+    char *number = (char*)mini_calloc(1, number_digit + 2);
+    if(number == NULL){
+        mini_perror("Cannot Initiate Intermediate Buffer To Print Number!");
+        return;
+    }
+    for(int i = number_digit - 1; i >= 0; i--){
+        number[i] = '0' + count % 10;
+        count /= 10;
+    }
+    number[number_digit] = '\n';
+    number[number_digit + 1] = '\0';
+    mini_printf(number);
+    mini_fclose(my_file);
 }

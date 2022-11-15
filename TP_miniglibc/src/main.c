@@ -52,6 +52,8 @@ int main(int argc, char **argv){
     mini_head("./src/main.c", 10);
     mini_tail("./src/main.c", 10);
     mini_clean("./dummy2.out");
+    mini_grep("include", "./dummy.out");
+    mini_wc("./dummy.out");
     mini_exit();
     // exo35 fini
 }
