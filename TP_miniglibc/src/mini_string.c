@@ -69,6 +69,7 @@ int mini_scanf(char *buf, int size_buffer){
         while((checker = read(0, ptr, 1))){
             if(checker < 0){
                 mini_perror("Error!");
+                return -1;
             }
             if(*((char*)ptr) == '\n'){
                 break;
@@ -87,7 +88,7 @@ int mini_strcpy(char *s, char *d){
 
 int mini_strcmp(char *s1, char *s2){
     int i = 0;
-    while(s1[i] != NULL && s2[i] != NULL){
+    while(s1[i] != '\0' && s2[i] != '\0'){
         if(s1[i] != s2[i]){
             return s1[i] - s2[i];
         }
