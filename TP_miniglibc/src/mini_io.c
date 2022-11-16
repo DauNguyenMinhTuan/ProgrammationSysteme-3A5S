@@ -241,6 +241,7 @@ void mini_cat(char *file_path){
     }
     data[file_size] = '\0';
     mini_printf(data);
+    mini_printf("\n");
     mini_fclose(my_file);
 }
 
