@@ -213,7 +213,6 @@ void mini_cp(char *src, char *dest){
         mini_perror("Error Copying Data To Destination File!");
         return;
     }
-    mini_fflush(dest_file);
     mini_fclose(src_file);
     mini_fclose(dest_file);
 }

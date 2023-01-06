@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/tuan9222/TaiLieuINSA/3AS5/ProgrammationSysteme/ProgrammationSysteme-3A5S/TP_miniglibc",
-      "program": "/home/tuan9222/TaiLieuINSA/3AS5/ProgrammationSysteme/ProgrammationSysteme-3A5S/TP_miniglibc/build/Debug/outDebug",
+      "cwd": "/home/tuan9222/TaiLieuINSA/3AS5/ProgrammationSysteme/ProgrammationSysteme-3A5S/TD6",
+      "program": "/home/tuan9222/TaiLieuINSA/3AS5/ProgrammationSysteme/ProgrammationSysteme-3A5S/TD6/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
