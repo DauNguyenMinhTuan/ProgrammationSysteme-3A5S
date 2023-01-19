@@ -18,7 +18,8 @@ int main() {
     pid_t pid;
     char cmd[1024];
     while (1) {
-        scanf("%s", cmd);
+        scanf("%[^\n]s", cmd);
+		getchar();
         if (!strcmp(cmd, "exit")) {
             break;
         }
