@@ -32,7 +32,7 @@ int mini_scanf(char *buf, int size_buffer);
 
 int mini_strcpy(char *src, char *dest);
 
-int mini_strcmp(char *s1, char *s2);
+int mini_strcmp(const char *s1, char *s2);
 
 void mini_perror(char *message);
 
@@ -67,5 +67,21 @@ void mini_clean(char *file_path);
 void mini_grep(char *word, char *file_path);
 
 void mini_wc(char *file_path);
+
+void mini_ls();
+
+void mini_chmod(char *filepath, int mode);
+
+void mini_ln(char *target, char *link_path);
+
+void mini_quickdiff(char *src, char *dest);
+
+void mini_mkdir(char *folder_path, int mode);
+
+void mini_rm(char *file_path);
+
+void mini_rmdir(char *folder_path);
+
+void mini_mv(char *src, char *dest);
 
 #endif
